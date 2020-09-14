@@ -1,0 +1,157 @@
+/**
+ * JavaCC template file created by SF JavaCC plugin 1.5.28+ wizard for JavaCC 1.5.0+
+ */options{  static = false;}PARSER_BEGIN(JJTest2)package com.delligattiassociates.jct.test.parser;
+
+public class JJTest2{
+  void report(String s)
+  {	System.out.printf("Parsed <%s>.\n", s);
+  }}PARSER_END(JJTest2)
+SKIP: { <LINE_TERMINATOR : "\n" | "\r"> }
+SKIP: { <WHITE_SPACE : " " | "\t" |< LINE_TERMINATOR > > }
+MORE: { "//" : STATE_SINGLE_LINE_NOTE }
+<STATE_SINGLE_LINE_NOTE> TOKEN: { <T_SINGLE_LINE_NOTE: "\n" > : DEFAULT }
+<STATE_SINGLE_LINE_NOTE> MORE: { < ~[] > }
+
+MORE: { "//*" : STATE_MULTILINE_NOTE }
+<STATE_MULTILINE_NOTE> MORE: { < ~[] > }
+<STATE_MULTILINE_NOTE> TOKEN: { <T_MULTILINE_NOTE: "*/"> : DEFAULT }
+
+MORE: { "/*" : STATE_REGULAR_COMMENT }
+<STATE_REGULAR_COMMENT> MORE: { < ~[] > }
+<STATE_REGULAR_COMMENT> TOKEN: { <T_REGULAR_COMMENT: "*/" > : DEFAULT }
+
+MORE: { "/**" : STATE_DOCUMENTATION_COMMENT }
+<STATE_DOCUMENTATION_COMMENT> MORE: { < ~[] > }
+<STATE_DOCUMENTATION_COMMENT> TOKEN: { <T_DOCUMENTATION_COMMENT: "*/" > : DEFAULT }
+
+TOKEN:
+{
+  <T_TYPED_BY: ":">
+| <T_SPECIALIZES: ":>">
+| <T_SUBSETS: <T_SPECIALIZES>>
+| <T_REDEFINES: ":>>">
+| <T_CONJUGATES: "~">
+}
+
+TOKEN: /* Keywords */
+{
+  <K_QUIT: "quit">
+| <K_ABOUT: "about">
+| <K_ABSTRACT: "abstract">
+| <K_ALL: "all">
+| <K_ALIAS: "alias">
+| <K_ANY: "any">
+| <K_AS: "as">
+| <K_ASSOC: "assoc">
+| <K_BEHAVIOR: "behavior">
+| <K_BY: "by">
+| <K_BINDING: "binding">
+| <K_BOOL: "bool">
+| <K_CLASS: "class">
+| <K_CLASSIFIER: "classifier">
+| <K_COMMENT: "comment">
+| <K_COMPOSITE: "composite">
+| <K_CONJUGATES: "conjugates">
+| <K_CONJUGATION: "conjugation">
+| <K_CONNECTOR: "connector">
+| <K_DATATYPE: "datatype">
+| <K_DERIVED: "derived">
+| <K_DOC: "doc">
+| <K_END: "end">
+| <K_ELEMENT: "element">
+| <K_EXPR: "expr">
+| <K_FALSE: "false">
+| <K_FEATURE: "feature">
+| <K_FIRST: "first">
+| <K_FLOW: "flow">
+| <K_FROM: "from">
+| <K_FUNCTION: "function">
+| <K_GENERALIZATION: "generalization">
+| <K_IMPORT: "import">
+| <K_ID: "id">
+| <K_IN: "in">
+| <K_INOUT: "inout">
+| <K_INTERACTION: "interaction">
+| <K_INV: "inv">
+| <K_LANGUAGE: "language">
+| <K_NONUNIQUE: "nonunique">
+| <K_NULL: "null">
+| <K_OF: "of">
+| <K_ORDERED: "ordered">
+| <K_OUT: "out">
+| <K_PACKAGE: "package">
+| <K_PORT: "port">
+| <K_PORTION: "portion">
+| <K_PREDICATE: "predicate">
+| <K_PRIVATE: "private">
+| <K_PROTECTED: "protected">
+| <K_PUBLIC: "public">
+| <K_READONLY: "readonly">
+| <K_REDEFINES: "redefines">
+| <K_RELATIONSHIP: "relationship">
+| <K_REP: "rep">
+| <K_SPECIALIZES: "specializes">
+| <K_STEP: "step">
+| <K_STREAM: "stream">
+| <K_SUBCLASS: "subclass">
+| <K_SUBSET: "subset">
+| <K_SUBSETS: "subsets">
+| <K_SUBTYPE: "subtype">
+| <K_SUCCESSION: "succession">
+| <K_THEN: "then">
+| <K_TO: "to">
+| <K_TRUE: "true">
+| <K_TYPE: "type">
+| <K_TYPED: "typed">
+}
+
+TOKEN: {
+  <T_BASIC_NAME: <LETTER> (<LETTER> | <DIGIT>)*>
+| <#LETTER: ["a"-"z","A"-"Z","_"]>
+| <#DIGIT: ["0"-"9"]>
+}
+
+TOKEN: {
+  <T_UNRESRICTED_NAME: "'" (<BS_CHAR> | <NBS_CHAR>)* "'" >
+| <#BS_CHAR: "\\" ["b", "t", "n", "f", "\"", "'", "\\"] >
+| <#NBS_CHAR: ~["'","\\"] >
+}
+
+TOKEN: {
+  <T_DECIMAL_VALUE: <DIGIT> (<DIGIT>)* >
+ }
+
+ TOKEN: {
+   <T_EXPONENTIAL_VALUE: <T_DECIMAL_VALUE> ("E" | "e") ("+" | "-")? <T_DECIMAL_VALUE>>
+ }
+
+ TOKEN: {
+   <T_STRING_VALUE: "\"" (<SBS_CHAR> | <SNBS_CHAR>)* "\"" >
+| <#SBS_CHAR: "\\" ["b", "t", "n", "f", "\"", "'", "\\"] >
+| <#SNBS_CHAR: ~["\""]>
+}
+
+void one_line(): {}
+{
+  <T_STRING_VALUE > { System.out.println("Scanned a string value"); }
+| <T_DECIMAL_VALUE > { System.out.println("Scanned a decimal value"); }
+| <T_EXPONENTIAL_VALUE > { System.out.println("Scanned an exponential value"); }
+| <T_SINGLE_LINE_NOTE> { System.out.println("Scanned an inline note."); }
+| <T_MULTILINE_NOTE> { System.out.println("Scanned an inline note."); }
+| <T_REGULAR_COMMENT> { System.out.println("Scanned a regular comment."); }
+| <T_DOCUMENTATION_COMMENT> { System.out.println("Scanned a doc comment."); }
+| <T_BASIC_NAME> { System.out.println("Scanned a basic name."); }
+| <T_UNRESRICTED_NAME> { System.out.println("Scanned an unrestricted name."); }
+| ";" { System.out.println("That was an empty line!"); }
+}
+
+void end() : { }
+{
+  <EOF> | <K_QUIT>
+}
+
+void file() :
+{}
+{
+  (one_line())* end()
+}
